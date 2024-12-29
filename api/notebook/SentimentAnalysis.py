@@ -1,4 +1,5 @@
 import pandas as pd
+
 from fastai.text.all import *
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -11,8 +12,8 @@ app = FastAPI()
 
 # Loads user given CSV File
 def load_data(file_path):
-    # Load only the first 5000 rows for testing
-    df = pd.read_csv(file_path, encoding='ISO-8859-1', nrows=5000)
+    # Load only the first 2000 rows for testing
+    df = pd.read_csv(file_path, encoding='ISO-8859-1', nrows=2000)
     print(f"Loaded data with {len(df)} records.")
     return df
 
@@ -29,7 +30,7 @@ def preprocess_data(df):
 def learn_data(dls):
     # Define text classifier and fine-tune it
     learn = text_classifier_learner(dls, AWD_LSTM, drop_mult=0.5, metrics=accuracy)
-    learn.fine_tune(4, 1e-2)
+    learn.fine_tune(8, 1e-2)
     
     return learn
 
@@ -54,7 +55,7 @@ def load_model():
 
     learn = learn_data(dls)
 
-@app.post("/predict_sentiment/")
+@app.get("/predict_sentiment/")
 def predict_word_sentiment(request: SentimentRequest):
     """ Predict the sentiment for each word in the given paragraph. """
     paragraph = request.paragraph

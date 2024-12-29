@@ -1,11 +1,11 @@
 FROM python:3.10
 
-RUN pip install notebook torch fastai pandas fastapi uvicorn
+RUN pip install notebook torch fastai pandas fastapi[standard] uvicorn supervisor
 
 COPY ../ /home/
 
-WORKDIR /home/
+WORKDIR /home/notebook
 
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.password=''"]
+CMD ["/usr/local/bin/supervisord", "-c", "/home/supervisord.conf"]
 
 EXPOSE 8888 8000

@@ -4,5 +4,7 @@ services:
     ports:
       - "8888:8888"
       - "8000:8000"
+    command: >
+      bash -c "uvicorn SentimentAnalysis:app --host='0.0.0.0' --port=8000 --reload"
     volumes:
-      - ./api/notebook:/notebook
+      - ./:/notebook
