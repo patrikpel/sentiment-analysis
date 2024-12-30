@@ -1,0 +1,19 @@
+services:
+  web:
+    build:
+      context: ./web
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./web:/app
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+    networks:
+      - api-network
+
+networks:
+  api-network:
+    driver: bridge
