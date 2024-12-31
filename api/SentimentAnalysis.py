@@ -1,4 +1,5 @@
 import pandas as pd
+import html
 
 from fastai.text.all import *
 from fastapi import FastAPI
@@ -55,13 +56,16 @@ def load_model():
 
     learn = learn_data(dls)
 
-@app.get("/predict_sentiment/")
+@app.post("/predict_sentiment/")
 def predict_word_sentiment(request: SentimentRequest):
     """ Predict the sentiment for each word in the given paragraph. """
     paragraph = request.paragraph
     
-    # Tokenize the paragraph into individual words
-    words = paragraph.split()
+    # HTML decode the paragraph to handle any HTML entities
+    decoded_paragraph = html.unescape(paragraph)
+    
+    # Tokenize the decoded paragraph into individual words
+    words = decoded_paragraph.split()
     
     # Create a list to store sentiment predictions
     word_sentiments = []
