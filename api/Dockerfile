@@ -1,6 +1,6 @@
 FROM python:3.10
 
-RUN pip install torch fastai pandas fastapi[standard] uvicorn supervisor
+RUN pip install torch fastai pandas fastapi[standard] supervisor
 
 COPY ../ /home/
 
