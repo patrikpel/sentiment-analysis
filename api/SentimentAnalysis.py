@@ -1,6 +1,6 @@
 import pandas as pd
 import html
-
+import re
 from fastai.text.all import *
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -23,8 +23,8 @@ app.add_middleware(
 
 # Loads user given CSV File
 def load_data(file_path):
-    # Load only the first 2000 rows for testing
-    df = pd.read_csv(file_path, encoding='ISO-8859-1', nrows=2000)
+    # Load only the first 5000 rows for testing
+    df = pd.read_csv(file_path, encoding='ISO-8859-1', nrows=5000)
     print(f"Loaded data with {len(df)} records.")
     return df
 
@@ -50,7 +50,7 @@ class SentimentRequest(BaseModel):
     paragraph: str
 
 class SentimentResponse(BaseModel):
-    word_sentiments: List[Tuple[str, str, List[float]]]
+    sentence_sentiments: List[Tuple[str, str, List[float]]]
 
 # Load the model globally
 @app.on_event("startup")
@@ -67,25 +67,25 @@ def load_model():
     learn = learn_data(dls)
 
 @app.post("/predict_sentiment/")
-def predict_word_sentiment(request: SentimentRequest):
-    """ Predict the sentiment for each word in the given paragraph. """
+def predict_sentence_sentiment(request: SentimentRequest):
+    """ Predict the sentiment for each sentence in the given paragraph. """
     paragraph = request.paragraph
     
     # HTML decode the paragraph to handle any HTML entities
     decoded_paragraph = html.unescape(paragraph)
     
-    # Tokenize the decoded paragraph into individual words
-    words = decoded_paragraph.split()
+    # Split the paragraph into sentences using a regex pattern for common sentence delimiters
+    sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', decoded_paragraph)
     
     # Create a list to store sentiment predictions
-    word_sentiments = []
+    sentence_sentiments = []
     
-    # Get predictions for each word
-    for word in words:
-        # FastAI's `predict` method expects a list of text, so we pass the word as a list
-        pred, _, probs = learn.predict(word)
+    # Get predictions for each sentence
+    for sentence in sentences:
+        # FastAI's `predict` method expects a list of text, so we pass the sentence as a list
+        pred, _, probs = learn.predict(sentence)
         
-        # Append the predicted sentiment and probability for each word
-        word_sentiments.append((word, pred, probs.tolist()))  # Convert to list for JSON serialization
+        # Append the predicted sentiment and probability for each sentence
+        sentence_sentiments.append((sentence, pred, probs.tolist()))  # Convert to list for JSON serialization
     
-    return SentimentResponse(word_sentiments=word_sentiments)
+    return SentimentResponse(sentence_sentiments=sentence_sentiments)
