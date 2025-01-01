@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main-bg {
+    @apply bg-gradient-to-r from-blue-500 via-purple-400 to-pink-400;
+}
+
+html {
+    @apply main-bg
+}
