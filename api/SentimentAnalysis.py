@@ -7,9 +7,19 @@ from pydantic import BaseModel
 from typing import List, Tuple, ClassVar
 from fastai.data.block import DataBlock, CategoryBlock, DataLoaders
 from fastai.learner import Learner   # Explicit import for Learner
+from fastapi.middleware.cors import CORSMiddleware
 
 # FastAPI app instance
 app = FastAPI()
+
+# Allow all origins (replace with your actual frontend URL in production)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (you can restrict this to your frontend URL)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Loads user given CSV File
 def load_data(file_path):
