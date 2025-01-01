@@ -4,9 +4,9 @@ import re
 from fastai.text.all import *
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Tuple, ClassVar
+from typing import List, Tuple
 from fastai.data.block import DataBlock, CategoryBlock, DataLoaders
-from fastai.learner import Learner   # Explicit import for Learner
+from fastai.learner import Learner  # Explicit import for Learner
 from fastapi.middleware.cors import CORSMiddleware
 
 # FastAPI app instance
@@ -51,6 +51,7 @@ class SentimentRequest(BaseModel):
 
 class SentimentResponse(BaseModel):
     sentence_sentiments: List[Tuple[str, str, List[float]]]
+    paragraph_breaks: List[int]  # To store positions of paragraph breaks
 
 # Load the model globally
 @app.on_event("startup")
@@ -77,6 +78,9 @@ def predict_sentence_sentiment(request: SentimentRequest):
     # Split the paragraph into sentences using a regex pattern for common sentence delimiters
     sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', decoded_paragraph)
     
+    # Track paragraph breaks: We will detect the position of breaks based on newline characters
+    paragraph_breaks = [i for i, char in enumerate(decoded_paragraph) if char == '\n']
+    
     # Create a list to store sentiment predictions
     sentence_sentiments = []
     
@@ -88,4 +92,7 @@ def predict_sentence_sentiment(request: SentimentRequest):
         # Append the predicted sentiment and probability for each sentence
         sentence_sentiments.append((sentence, pred, probs.tolist()))  # Convert to list for JSON serialization
     
-    return SentimentResponse(sentence_sentiments=sentence_sentiments)
+    return SentimentResponse(
+        sentence_sentiments=sentence_sentiments,
+        paragraph_breaks=paragraph_breaks
+    )
