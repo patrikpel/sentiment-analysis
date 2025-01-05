@@ -14,5 +14,6 @@ The first step in running this project is building and running the Docker images
 #### Step 2.1: Wait for the AI to finish the learning process
 You can follow this from the API container's docker logs. It should take around 20 minutes.
 
-### Step 3: Access the web app
-Open the web app on your browser. It should be located at http://localhost:5173
+### Step 3: Access the web app and try it!
+Open the web app on your browser. It should be located at http://localhost:5173 \
+Write your text in the text box and hit "Send". You can also cancel your request, if you get second thoughts. If the API is unresponsive, the request has a timeout of 10 seconds.
