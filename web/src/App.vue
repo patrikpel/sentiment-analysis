@@ -14,13 +14,11 @@
             <ArrowUpIcon class="w-[20px]" v-else/>
           </div>
           <div v-if="responseComputed.length > 0" class="bg-[#2f2f2f69] px-3 py-1 rounded-xl max-h-[300px] overflow-y-auto">
-            <div class="flex flex-row flex-wrap">
+            <div class="flex flex-col">
               <p v-for="(item, index) in responseComputed" :key="index" :style="'color:'+item.textcolor" class="sentence-wrap">
-                {{ item.sentence }}
-                <!-- <p>{{ item.sentence }}</p> -->
-                <!-- <p><strong>{{ item.sentence }}</strong></p> -->
-                <!-- <p>Sentiment: {{ item.sentiment }}</p>
-                <p>Probabilities: Positive: {{ item.probabilities.positive }}, Negative: {{ item.probabilities.negative }}, Neutral: {{ item.probabilities.neutral }}</p> -->
+                <p><strong>{{ item.sentence }}</strong></p>
+                <p>Sentiment: {{ item.sentiment }}</p>
+                <p>Probabilities: Positive: {{ (item.probabilities.positive * 100).toFixed(2) }}%, Negative: {{ (item.probabilities.negative * 100).toFixed(2) }}%, Neutral: {{ (item.probabilities.neutral * 100).toFixed(2) }}%</p>
               </p>
             </div>
           </div>
