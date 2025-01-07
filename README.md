@@ -5,7 +5,7 @@ My developmental blade with Python is (at this moment) somewhat dull so I wrote 
 
 ## Setup 
 ### Step 1: Set how many rows you want the AI to download from the file (optional)
-The app has a default value of 5000, but if you want more or less accuracy, you can modify this in the [SentimentalAnalysis.py file in the function called `load_data`, on the row where data is loaded](https://github.com/patrikpel/sentiment-analysis/blob/d9b02d983faae0ed4ce47fb32a64eaa14e377924/api/SentimentAnalysis.py#L27). The base accuracy could be better, but with 5000 records it already takes some time to learn, so I stuck with this.
+The app has a default value of 5000, but if you want more or less accuracy, you can modify this in the [SentimentalAnalysis.py file in the function called `load_data`, on the row where data is loaded](https://github.com/patrikpel/sentiment-analysis/blob/4c0497c48ef9b6bca5b930c6159be225c67a9012/api/SentimentAnalysis.py#L27). The base accuracy could be better, but with 5000 records it already takes some time to learn, so I stuck with this.
 
 ### Step 2: Run the Docker images
 The first step in running this project is building and running the Docker images for the API and web app. Run this command: \
